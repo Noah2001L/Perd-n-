@@ -8,11 +8,12 @@
     body {
       text-align: center;
       background-color: #f0f0f0; /* Color de fondo */
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     h2 {
-      color: #000; /* Negro */
+      color: #3366cc; /* Azul */
+      font-size: 2em;
     }
 
     button {
@@ -26,13 +27,13 @@
     }
 
     #si-btn {
-      background-color: #87CEEB; /* Azul celeste */
+      background-color: #5cb85c; /* Verde */
       color: white;
       transition: all 0.3s;
     }
 
     #no-btn {
-      background-color: #000; /* Negro */
+      background-color: #d9534f; /* Rojo */
       color: white;
       transition: all 0.3s;
     }
@@ -40,15 +41,17 @@
     #respuesta {
       margin-top: 20px;
       color: #000; /* Negro */
+      font-size: 1.5em;
     }
 
     #cinnamonGif {
       margin-top: 20px;
       border-radius: 5px;
+      transition: all 0.3s;
     }
 
     #si-btn:hover {
-      transform: scale(1.1);
+      transform: scale(3);
     }
 
     #no-btn.small {
@@ -105,14 +108,21 @@
       'https://www.icegif.com/wp-content/uploads/2023/11/icegif-411.gif'
     ];
 
+    let noGifs = [
+      'https://i.pinimg.com/originals/8e/98/f2/8e98f2d596e62204a3049e1e36eb155c.gif',
+      'https://i.pinimg.com/originals/ec/04/30/ec04307ec7efef384928228acb77662d.gif',
+      'https://i.pinimg.com/originals/c3/aa/cd/c3aacd60eb077a536826f8e104b7eebf.gif'
+    ];
+
     let indiceRespuesta = 0;
+    let lastNoGif = null;
 
     function cambiarRespuesta(opcion) {
       if (opcion === 'Sí') {
-        document.getElementById('respuesta').innerText = '¡KIMA ERES LA MEJOR! ¡GRACIAS POR EXISTIR!';
+        document.getElementById('respuesta').innerHTML = '<span style="color: #5cb85c; font-weight: bold;">¡KIMA ERES LA MEJOR! ¡GRACIAS POR EXISTIR!</span>';
         document.getElementById('hidden-img').style.display = 'block';
       } else {
-        document.getElementById('respuesta').innerText = respuestas[indiceRespuesta];
+        document.getElementById('respuesta').innerHTML = respuestas[indiceRespuesta];
         indiceRespuesta = (indiceRespuesta + 1) % respuestas.length;
         document.getElementById('hidden-img').style.display = 'none';
         
@@ -120,6 +130,15 @@
         document.getElementById('si-btn').style.transform = 'scale(1)';
         // Hacer más pequeño el botón "No"
         document.getElementById('no-btn').classList.add('small');
+
+        // Mostrar imágenes aleatorias en el botón "No" sin repetir la última
+        let randomNoGif;
+        do {
+          randomNoGif = noGifs[Math.floor(Math.random() * noGifs.length)];
+        } while (randomNoGif === lastNoGif);
+
+        lastNoGif = randomNoGif;
+        document.getElementById('cinnamonGif').src = randomNoGif;
       }
     }
 
