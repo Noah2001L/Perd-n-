@@ -1,153 +1,170 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>¿Me perdonas?</title>
-  <style>
-    body {
-      text-align: center;
-      background-color: #f0f0f0; /* Color de fondo */
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego Sanrio de Química con Kuromi</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff5f5; /* Fondo rosa suave */
+            text-align: center;
+            margin: 20px;
+        }
 
-    h2 {
-      color: #3366cc; /* Azul */
-      font-size: 2em;
-    }
+        h1 {
+            color: #ff66b2; /* Rosa brillante */
+        }
 
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      margin: 10px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      transition: all 0.3s;
-    }
+        h2 {
+            color: #ff66b2; /* Rosa brillante */
+        }
 
-    #si-btn {
-      background-color: #5cb85c; /* Verde */
-      color: white;
-      transition: all 0.3s;
-    }
+        div {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1); /* Sutil sombra */
+        }
 
-    #no-btn {
-      background-color: #d9534f; /* Rojo */
-      color: white;
-      transition: all 0.3s;
-    }
+        input {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ff66b2; /* Borde rosa */
+            border-radius: 5px;
+            width: 60%;
+        }
 
-    #respuesta {
-      margin-top: 20px;
-      color: #000; /* Negro */
-      font-size: 1.5em;
-    }
+        button {
+            padding: 10px 20px;
+            background-color: #ff66b2; /* Rosa brillante */
+            color: #fff; /* Texto blanco */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-    #cinnamonGif {
-      margin-top: 20px;
-      border-radius: 5px;
-      transition: all 0.3s;
-    }
+        button:hover {
+            background-color: #e60073; /* Rosa más oscuro al pasar el ratón */
+        }
 
-    #si-btn:hover {
-      transform: scale(3);
-    }
+        #kuromi {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
 
-    #no-btn.small {
-      transform: scale(0.8);
-    }
+        #correcto,
+        #incorrecto {
+            max-width: 100%;
+            border-radius: 10px;
+            display: none;
+        }
 
-    #hidden-img {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente blanco */
-      z-index: 999;
-    }
-
-    #pop-img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-width: 80%;
-      max-height: 80%;
-    }
-  </style>
+        #pregunta1,
+        #pregunta2,
+        #resultado {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
 </head>
+
 <body>
+    <h1>Juego Sanrio de Química con Kuromi</h1>
 
-  <h2 id="pregunta">¿Me perdonas?</h2>
-  
-  <button id="si-btn" onclick="cambiarRespuesta('Sí')">Sí</button>
-  <button id="no-btn" onclick="cambiarRespuesta('No')" class="small">No</button>
+    <div id="pregunta1">
+        <h2 style="color: #ffcc80;">Pregunta 1: ¿Cuántos electrones tiene un átomo de hidrógeno?</h2>
+        <input type="text" id="respuesta1" placeholder="Ingresa tu respuesta">
+        <button onclick="verificarRespuesta(1)">Verificar</button>
+    </div>
 
-  <p id="respuesta">Selecciona una opción</p>
+    <div id="pregunta2" style="display: none;">
+        <h2 style="color: #ffcc80;">Pregunta 2: ¿Cuántos átomos de oxígeno hay en una molécula de agua (H<sub>2</sub>O)?</h2>
+        <input type="text" id="respuesta2" placeholder="Ingresa tu respuesta">
+        <button onclick="verificarRespuesta(2)">Verificar</button>
+    </div>
 
-  <div id="hidden-img" onclick="ocultarImagen()">
-    <img id="pop-img" src="https://i.pinimg.com/originals/75/2d/9a/752d9ac89241f4be4bf1c2071f4e22ef.gif" alt="Pop Image">
-  </div>
+    <div id="resultado" style="display: none;">
+        <h2 id="mensajeResultado"></h2>
+        <img src="https://www.pngtank.com/storage/thumbnails/64970e2199550.png" alt="Kuromi" id="kuromi">
+        <img src="" alt="Respuesta Correcta" id="correcto">
+        <img src="https://i.pinimg.com/originals/5e/62/fc/5e62fcdcaa6fac15f1db688b7d20401e.gif" alt="Respuesta Incorrecta" id="incorrecto">
+    </div>
 
-  <script>
-    let respuestas = [
-      'Pero si me perdonas?',
-      '¿Kima Perdon?',
-      'Lo hice por ti, por mi familia y por KimaaAAAAa',
-      '¿Pero si me perdonas?',
-      '¿Todo eso te dijo el código que programé?'
-    ];
+    <script>
+        var preguntaActual = 1;
+        var totalPreguntas = 2; // Ajusta el total de preguntas según sea necesario
 
-    let gifs = [
-      'https://www.icegif.com/wp-content/uploads/2022/05/icegif-372.gif',
-      'https://www.icegif.com/wp-content/uploads/2023/03/icegif-390.gif',
-      'https://usagif.com/wp-content/uploads/gify/cinnamoroll-cute-blinking-usagif.gif',
-      'https://www.icegif.com/wp-content/uploads/2023/11/icegif-411.gif'
-    ];
+        var respuestasCorrectas = {
+            1: '1',  // Respuesta correcta para la pregunta 1
+            2: '1'   // Respuesta correcta para la pregunta 2
+            // Agrega más respuestas según sea necesario
+        };
 
-    let noGifs = [
-      'https://i.pinimg.com/originals/8e/98/f2/8e98f2d596e62204a3049e1e36eb155c.gif',
-      'https://i.pinimg.com/originals/ec/04/30/ec04307ec7efef384928228acb77662d.gif',
-      'https://i.pinimg.com/originals/c3/aa/cd/c3aacd60eb077a536826f8e104b7eebf.gif'
-    ];
+        function verificarRespuesta(numeroPregunta) {
+            var respuestaUsuario = document.getElementById('respuesta' + numeroPregunta).value.trim().toLowerCase();
+            var respuestaCorrecta = respuestasCorrectas[numeroPregunta];
 
-    let indiceRespuesta = 0;
-    let lastNoGif = null;
+            if (respuestaUsuario === respuestaCorrecta) {
+                mostrarResultado(true);
+                pasarSiguientePregunta();
+            } else {
+                mostrarResultado(false);
+            }
+        }
 
-    function cambiarRespuesta(opcion) {
-      if (opcion === 'Sí') {
-        document.getElementById('respuesta').innerHTML = '<span style="color: #5cb85c; font-weight: bold;">¡KIMA ERES LA MEJOR! ¡GRACIAS POR EXISTIR!</span>';
-        document.getElementById('hidden-img').style.display = 'block';
-      } else {
-        document.getElementById('respuesta').innerHTML = respuestas[indiceRespuesta];
-        indiceRespuesta = (indiceRespuesta + 1) % respuestas.length;
-        document.getElementById('hidden-img').style.display = 'none';
-        
-        // Asegurarse de que el botón "Sí" está en su tamaño normal
-        document.getElementById('si-btn').style.transform = 'scale(1)';
-        // Hacer más pequeño el botón "No"
-        document.getElementById('no-btn').classList.add('small');
+        function mostrarResultado(esCorrecto) {
+            var mensajeResultado = document.getElementById('mensajeResultado');
+            var kuromiImagen = document.getElementById('kuromi');
+            var correctoImagen = document.getElementById('correcto');
+            var incorrectoImagen = document.getElementById('incorrecto');
 
-        // Mostrar imágenes aleatorias en el botón "No" sin repetir la última
-        let randomNoGif;
-        do {
-          randomNoGif = noGifs[Math.floor(Math.random() * noGifs.length)];
-        } while (randomNoGif === lastNoGif);
+            if (esCorrecto) {
+                mensajeResultado.textContent = '¡Respuesta Correcta!';
+                kuromiImagen.style.display = 'block';
+                correctoImagen.style.display = 'block';
+                incorrectoImagen.style.display = 'none';
+            } else {
+                mensajeResultado.textContent = 'Respuesta Incorrecta';
+                kuromiImagen.style.display = 'none';
+                correctoImagen.style.display = 'none';
+                incorrectoImagen.style.display = 'block';
+            }
 
-        lastNoGif = randomNoGif;
-        document.getElementById('cinnamonGif').src = randomNoGif;
-      }
-    }
+            document.getElementById('resultado').style.display = 'flex';
+        }
 
-    function ocultarImagen() {
-      document.getElementById('hidden-img').style.display = 'none';
-    }
-  </script>
+        function pasarSiguientePregunta() {
+            preguntaActual++;
 
-  <img id="cinnamonGif" src="https://www.icegif.com/wp-content/uploads/2022/05/icegif-372.gif" alt="Cinnamon Roll Gif" width="200">
+            if (preguntaActual <= totalPreguntas) {
+                var preguntaActualDiv = document.getElementById('pregunta' + preguntaActual);
+                var preguntaAnteriorDiv = document.getElementById('pregunta' + (preguntaActual - 1));
 
+                preguntaAnteriorDiv.style.display = 'none';
+                preguntaActualDiv.style.display = 'flex';
+            } else {
+                // Todas las preguntas respondidas
+                mostrarFelicitacion();
+            }
+        }
+
+        function mostrarFelicitacion() {
+            var resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.style.display = 'none'; // Oculta la sección de resultados
+            
+            var felicitacionDiv = document.createElement('div');
+            felicitacionDiv.innerHTML = '<h2>FELICIDADES, SABES MÁS DE QUÍMICA QUE NOÉ</h2><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx60loDzak7ZHnPKMJPOvAya3_6cL1XgWq6g&usqp=CAU" alt="Felicitación">';
+            
+            document.body.appendChild(felicitacionDiv);
+        }
+    </script>
 </body>
+
 </html>
